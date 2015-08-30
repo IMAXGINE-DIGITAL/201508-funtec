@@ -50,10 +50,10 @@
 	$.app.clientB.allocB(function(){
 		var handler = function(state){
 			var _this = this;
-			console.log(_this.status);
+			console.log(state, $.Client.STATUS.RUNNING);
 			switch (state){
 				case $.Client.STATUS.RUNNING:
-					var status = $.app.clientA.status;
+					var status = $.app.clientB.status;
 					if (status == $.Client.STATUS.READY){
 						_this.running1();
 					}else if (status == $.Client.STATUS.RUNNING){
@@ -76,7 +76,7 @@
 					};
 					break;
 				case $.Client.STATUS.FINISHED:
-					_this.finish();
+					_this.finish($.app.clientB.finishHanlder);
 					break;
 				case $.Client.STATUS.INVALID:
 
@@ -96,11 +96,7 @@
 	});
 
 	$("#btn-finish").click(function(e){
-		$.app.clientB.finish(function(){
-			var _this = this;
-			_this.stop1();
-			_this.stop2();
-		});
+		$.app.clientB.finish($.app.clientB.finishHanlder);
 	});
 
 })(jQuery);

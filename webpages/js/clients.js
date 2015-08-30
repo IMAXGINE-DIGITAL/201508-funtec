@@ -13,7 +13,7 @@
 			$("div#result").html(e.responseText);
 		},
 		//contentType: "application/xml; charset=utf-8",
-		contentType: "application/json; charset=utf-8",
+		//contentType: "application/json; charset=utf-8",
 		dataType: "json"//"xml"
 	});
 
@@ -33,11 +33,11 @@
 	};
 	$.Client.STATUS = {
 		INIT: "init",
-		READY: "ready",
-		RUNNING: "running",
-		CRASHED: "crashed",
-		FINISHED: "finished",
-		INVALID: "invalid"
+		READY: 1,
+		RUNNING: 2,
+		CRASHED: 3,
+		FINISHED: 4,
+		INVALID: 0
 	};
 	$.Client.prototype.init = function(settings){
 		var _this = this;
@@ -56,7 +56,7 @@
 			// var result = $.xml2json(result, false);
 			if (result.status === "success"){
 				_this.transId = result.trans_id;
-				_this.id = $.cookie("role_id");
+				_this.id = "role0";//$.cookie("role_id");
 				_this.status = $.Client.STATUS.READY;
 
 				if ($.isFunction(callback)){
@@ -74,7 +74,7 @@
 		}, function(result){
 			// var result = $.xml2json(result, false);
 			if (result.status === "success"){
-				_this.id = $.cookie("role_id");
+				_this.id = "role1"//$.cookie("role_id");
 				_this.status = $.Client.STATUS.READY;
 
 				if ($.isFunction(callback)){
@@ -94,7 +94,7 @@
 			// var result = $.xml2json(result, false);
 			if (result.status === "success"){
 				if ($.isFunction(callback)){
-					callback.call(_this, result.HondaSafetyTechTransState);
+					callback.call(_this, result.state);
 				};
 			};
 			console.log(result);

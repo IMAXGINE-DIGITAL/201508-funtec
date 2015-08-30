@@ -22,6 +22,12 @@
 		$("div#animate-block").html("");
 	};
 
+	$.app.clientA.finishHanlder = function(){
+		var _this = this;
+		_this.stop1();
+		_this.stop2();
+	}
+
 	$.app.clientA.start = function(){};
 
 })(jQuery);

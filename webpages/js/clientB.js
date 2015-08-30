@@ -1,10 +1,9 @@
 (function($){
 	$.app = $.app || {};
-	$.app.transId = $.getUrlParam("trans_id");
-
+	//console.log( $.getUrlParam("trans_id"));
 	$.app.clientB = new $.Client({
 		role: 1,
-		trans_id: $.app.transId
+		transId: $.getUrlParam("trans_id")
 	});
 	$.app.clientB.running1 = function(){
 		var _this = this;
@@ -23,6 +22,12 @@
 	$.app.clientB.stop2 = function(){
 		var _this = this;
 		$("div#animate-block").html("");
+	};
+
+	$.app.clientB.finishHanlder = function(){
+		var _this = this;
+		_this.stop1();
+		_this.stop2();
 	};
 
 

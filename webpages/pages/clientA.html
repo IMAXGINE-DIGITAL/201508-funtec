@@ -84,7 +84,7 @@
 					};
 					break;
 				case $.Client.STATUS.FINISHED:
-					_this.finish();
+					_this.finish($.app.clientA.finishHanlder);
 					break;
 				case $.Client.STATUS.INVALID:
 
@@ -101,11 +101,7 @@
 	});
 
 	$("#btn-finish").click(function(e){
-		$.app.clientA.finish(function(){
-			var _this = this;
-			_this.stop1();
-			_this.stop2();
-		});
+		$.app.clientA.finish($.app.clientA.finishHanlder);
 	});
 
 
