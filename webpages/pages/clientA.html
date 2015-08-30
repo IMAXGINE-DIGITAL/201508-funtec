@@ -26,14 +26,26 @@
 
 <body>
 <div class="main">
-	
+	<button id="btn-start">开始</button>
+	<!-- <button></button> -->
 </div>
 <script type="text/javascript" src="../libs/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="../libs/jquery.xml2json.js"></script>
+<script type="text/javascript" src="../js/common.js"></script>
 <script type="text/javascript" src="../js/clients.js"></script>
+<script type="text/javascript" src="../js/clientA.js"></script>
 <script type="text/javascript">
 (function($){
-	var clientA = new $.ClientA();
-	console.log(clientA);
+	try{
+		$.app.clientA.start();
+	}catch(e){
+		console.log(e);
+	}
+
+	$("#btn-start").click(function(){
+		$.app.clientA.allocA();
+	});
+	
 })(jQuery);
 </script>
 </body>

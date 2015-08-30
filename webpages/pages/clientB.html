@@ -29,10 +29,18 @@
 	
 </div>
 <script type="text/javascript" src="../libs/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="../libs/jquery.xml2json.js"></script>
+<script type="text/javascript" src="../js/common.js"></script>
 <script type="text/javascript" src="../js/clients.js"></script>
+<script type="text/javascript" src="../js/clientB.js"></script>
 <script type="text/javascript">
 (function($){
-	var clientB = new $.ClientA();
+	try{
+		$.app.clientB.start();
+	}catch(e){
+		console.log(e);
+	};
+
 })(jQuery);
 </script>
 </body>
