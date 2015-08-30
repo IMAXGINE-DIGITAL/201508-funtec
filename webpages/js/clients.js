@@ -1,15 +1,16 @@
 (function($){
 
-	var URL_STATE = "../data/state.xml";
-	var URL_INIT_CLIENTA = "http://10.0.1.7:8080/HondaSafetyTechWs.asmx/HondaSafetyTechTransInit";
-	var URL_INIT_CLIENTB = "../data/init.xml";
-	var URL_ACCIDENT = "";
-	var URL_FINISH = "";
-	
+	var URL_STATE = "../../HondaSafetyTechWs.asmx?op=HondaSafetyTechGetState";
+	var URL_INIT_CLIENTA = "../../HondaSafetyTechWs.asmx/HondaSafetyTechTransInit";
+	var URL_INIT_CLIENTB = "../../HondaSafetyTechWs.asmx?op=HondaSafetyTechTransStart";
+	var URL_ACCIDENT = "../../HondaSafetyTechWs.asmx?op=HondaSafetyTechCrash";
+	var URL_FINISH = "../../HondaSafetyTechWs.asmx?op=HondaSafetyTechTransFinish";
+
 
 	$.ajaxSetup({
 		error: function(e){
 			console.log(e);
+			$("div#result").html(e.responseText);
 		},
 		dataType: "xml"
 	});
@@ -36,7 +37,9 @@
 	$.Client.prototype.allocA = function(callback){
 		var _this = this;
 		//向服务器注册client
-		$.post(URL_INIT_CLIENTA, function(result){
+		$.post(URL_INIT_CLIENTA,{
+			"mode": _this.mode
+		}, function(result){
 			var result = $.xml2json(result, false);
 			_this.id = result.id;
 			_this.roleId = result.roleId;
@@ -46,7 +49,8 @@
 	$.Client.prototype.allocB = function(callback){
 		var _this = this;
 		$.post(URL_INIT_CLIENTB, {
-			"trans_id": _this.transId
+			"trans_id": _this.transId,
+			"role": _this.role
 		}, function(result){
 			if ($.isFunction(callback)){
 				callback.call(_this, result);
@@ -65,14 +69,22 @@
 	};
 	$.Client.prototype.accident = function(){
 		var _this = this;
-		$.post(URL_ACCIDENT, function(result){
+		$.post(URL_ACCIDENT,{
+			"role_id": _this.id,
+			"role": _this.role,
+			"trans_id": _this.transId
+		}, function(result){
 			var result = $.xml2json(result, false);
 
 		});
 	};
 	$.Client.prototype.finish = function(){
 		var _this = this;
-		$.post(URL_FINISH, function(result){
+		$.post(URL_FINISH,{
+			"trans_id": _this.transId,
+			"role": _this.role,
+			"role_id": _this.roleId
+		}, function(result){
 			var result = $.xml2json(result, false);
 
 		});
