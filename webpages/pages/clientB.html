@@ -26,10 +26,16 @@
 
 <body>
 <div class="main">
-	
+	<button id="btn-crash">Crash</button>
+	<button id="btn-finish">Finish</button>
+
+	<hr/>
+	<div id="animate-block"></div>
+	<hr/>
+	<div id="result"></div>
 </div>
 <script type="text/javascript" src="../libs/jquery-1.9.1.min.js"></script>
-<script type="text/javascript" src="../libs/jquery.xml2json.js"></script>
+<!-- <script type="text/javascript" src="../libs/jquery.xml2json.js"></script> -->
 <script type="text/javascript" src="../js/common.js"></script>
 <script type="text/javascript" src="../js/clients.js"></script>
 <script type="text/javascript" src="../js/clientB.js"></script>
@@ -40,6 +46,62 @@
 	}catch(e){
 		console.log(e);
 	};
+
+	$.app.clientB.allocB(function(){
+		var handler = function(state){
+			var _this = this;
+			console.log(_this.status);
+			switch (state){
+				case $.Client.STATUS.RUNNING:
+					var status = $.app.clientA.status;
+					if (status == $.Client.STATUS.READY){
+						_this.running1();
+					}else if (status == $.Client.STATUS.RUNNING){
+
+					};
+					break;
+				case $.Client.STATUS.READY:
+
+					break;
+				case $.Client.STATUS.CRASHED:
+					if (_this.status == $.Client.STATUS.READY){
+						_this.running2();
+						// return;
+					}else if (_this.status == $.Client.STATUS.RUNNING){
+						_this.stop1();
+						_this.running2();
+						// return;
+					}else if (_this.status == $.Client.STATUS.CRASHED){
+						// return;
+					};
+					break;
+				case $.Client.STATUS.FINISHED:
+					_this.finish();
+					break;
+				case $.Client.STATUS.INVALID:
+
+					break;
+				default: 
+					console.error("未定义的状态");
+			};
+		};
+
+		$.app.clientB.rollState(handler);
+	});
+
+		
+
+	$("#btn-crash").click(function(e){
+		$.app.clientB.crash();
+	});
+
+	$("#btn-finish").click(function(e){
+		$.app.clientB.finish(function(){
+			var _this = this;
+			_this.stop1();
+			_this.stop2();
+		});
+	});
 
 })(jQuery);
 </script>
