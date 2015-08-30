@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta content="IE=edge" http-equiv="X-UA-Compatible">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0" name="viewport">
+
+<meta name="apple-touch-fullscreen" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta http-equiv="Access-Control-Allow-Origin" content="*">
+<meta content="" name="description">
+<meta content="et_cow" name="author">
+
+<title>Client A</title>
+
+<link rel="stylesheet" type="text/css" href="../css/reset.css">
+<link rel="stylesheet" type="text/css" href="../css/style.css">
+
+<!--[if IE 8]>
+	<link rel="stylesheet" type="text/css" href="../css/ie.css">
+	<script type="text/javascript" src="../libs/respond.js"></script>
+<![endif]-->
+
+</head>
+
+<body>
+<div class="main">
+	<button id="btn-start">Start</button>
+	<button id="btn-crash">Crash</button>
+	<button id="btn-finish">Finish</button>
+
+	<hr/>
+	<div id="animate-block"></div>
+	<hr/>
+	<a id="url-clientB" target="_blank" href="javascript:void(0);">Client B Scan</a>
+	<hr/>
+	<div id="result"></div>
+</div>
+<script type="text/javascript" src="../libs/jquery-1.9.1.min.js"></script>
+<!-- <script type="text/javascript" src="../libs/jquery.xmlns.js"></script> -->
+<!-- <script type="text/javascript" src="../libs/jquery.xml2json.js"></script> -->
+<script type="text/javascript" src="../js/common.js"></script>
+<script type="text/javascript" src="../js/clients.js"></script>
+<script type="text/javascript" src="../js/clientA.js"></script>
+<script type="text/javascript">
+(function($){
+	try{
+		$.app.clientA.start();
+	}catch(e){
+		console.log(e);
+	}
+
+	$("#btn-start").click(function(){
+		$.app.clientA.allocA(function(transId){
+			$("a#url-clientB").attr("href", "./clientB.html?trans_id="+transId);
+		});
+
+		var handler = function(state){
+			var _this = this;
+			console.log(_this.status);
+			switch (state){
+				case $.Client.STATUS.RUNNING:
+					var status = $.app.clientA.status;
+					if (status == $.Client.STATUS.READY){
+						_this.running1();
+					}else if (status == $.Client.STATUS.RUNNING){
+
+					};
+					break;
+				case $.Client.STATUS.READY:
+
+					break;
+				case $.Client.STATUS.CRASHED:
+					if (_this.status == $.Client.STATUS.READY){
+						_this.running2();
+						// return;
+					}else if (_this.status == $.Client.STATUS.RUNNING){
+						_this.stop1();
+						_this.running2();
+						// return;
+					}else if (_this.status == $.Client.STATUS.CRASHED){
+						// return;
+					};
+					break;
+				case $.Client.STATUS.FINISHED:
+					_this.finish();
+					break;
+				case $.Client.STATUS.INVALID:
+
+					break;
+				default: 
+					console.error("未定义的状态");
+			};
+		};
+		$.app.clientA.rollState(handler);
+	});
+
+	$("#btn-crash").click(function(e){
+		$.app.clientA.crash();
+	});
+
+	$("#btn-finish").click(function(e){
+		$.app.clientA.finish(function(){
+			var _this = this;
+			_this.stop1();
+			_this.stop2();
+		});
+	});
+
+
+
+
+})(jQuery);
+</script>
+</body>
+</html>
